@@ -12,6 +12,10 @@ namespace MatchingGame
 {
     public partial class MatchingGame : Form
     {
+        Label started = null;
+        private int _time = 0;
+        private int min = 0;
+        private int hour = 0;
         /* firstClicked points to the frist label control
          * that the player clicks, but it will be null
          * if the player hasn't clicked a label yet */
@@ -57,6 +61,10 @@ namespace MatchingGame
 
         private void label1_Click(object sender, EventArgs e)
         {
+            if(started == null)
+            {
+                timer2.Start();
+            }
             //the timer is only on after two no-matching icons
             // have been shown to the player,
             // so ignore any clicks if the timer is running
@@ -148,8 +156,24 @@ namespace MatchingGame
             //if the loop didn't return, it didn't find
             //any unmatched icons
             //that means the user won. Show a message and close the form
-            MessageBox.Show("You matched all the icons!", "Congratulations");
+            timer2.Stop();
+            while(_time >= 60)
+            {
+                min++;
+                _time-= 60;
+            }
+            while(min >= 60)
+            {
+                hour++;
+                min-= 60;
+            }
+            MessageBox.Show("You matched all the icons!\nTime: "+hour+" hour "+min+" min "+_time+" seconds", "Congratulations");
             Close();
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            _time++;
         }
     }
 }
