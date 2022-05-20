@@ -7,15 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
 
 namespace MatchingGame
 {
     public partial class MatchingGame : Form
     {
-        Label started = null;
-        private int _time = 0;
-        private int min = 0;
-        private int hour = 0;
+        //add-ons, Sound
+        private SoundPlayer goodMatch;
+        private SoundPlayer badMatch;
+        private SoundPlayer won;
+        //add-ons,end
+
+        //Add-ons, Timer
+        Label started = null; // to know if a game has started
+        private int _time = 0; // for the timer, each time it ticks we add one 
+        private int min = 0; // for calcuating the time after the game ends
+        private int hour = 0; //for calcuating the time after the game ends
+        //Add-ons, end
+
         /* firstClicked points to the frist label control
          * that the player clicks, but it will be null
          * if the player hasn't clicked a label yet */
@@ -57,14 +67,20 @@ namespace MatchingGame
         {
             InitializeComponent();
             AssignIconsToSquares();
+            goodMatch = new SoundPlayer("good.wav");
+            badMatch = new SoundPlayer("bad.wav");
+            won = new SoundPlayer("won.wav");
         }
 
         private void label1_Click(object sender, EventArgs e)
         {
+            //add-ons, timer, if this is the first time the player had clicked on a square then start the timer
             if(started == null)
             {
                 timer2.Start();
             }
+            //add-ons end
+
             //the timer is only on after two no-matching icons
             // have been shown to the player,
             // so ignore any clicks if the timer is running
@@ -113,6 +129,7 @@ namespace MatchingGame
                 {
                     firstClicked = null;
                     secondClicked = null;
+                    goodMatch.Play();
                     return;
                 }
 
@@ -120,6 +137,7 @@ namespace MatchingGame
                    clicked two different icons, so start the
                    timer (which will wait three quarters of 
                    second, and then hide the icons) */
+                badMatch.Play();
                 timer1.Start();
             }
         }
@@ -153,9 +171,8 @@ namespace MatchingGame
                 }
             }
 
-            //if the loop didn't return, it didn't find
-            //any unmatched icons
-            //that means the user won. Show a message and close the form
+            //Add-ons,timer, if the player has won then stop the time
+            // and then change _time into the format hh:mm:ss
             timer2.Stop();
             while(_time >= 60)
             {
@@ -167,12 +184,20 @@ namespace MatchingGame
                 hour++;
                 min-= 60;
             }
+            //Add-ons End
+
+            /* if the loop didn't return, it didn't find
+               any unmatched icons
+               that means the user won. Show a message and close the form 
+               I added time to the message to display the time it took to win the game */
+            won.Play();
             MessageBox.Show("You matched all the icons!\nTime: "+hour+" hour "+min+" min "+_time+" seconds", "Congratulations");
             Close();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
         {
+            //add-ons, timer
             _time++;
         }
     }
