@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
+using System.Security.Permissions;
+using MatchingGame.Properties;
 
 namespace MatchingGame
 {
@@ -67,9 +69,9 @@ namespace MatchingGame
         {
             InitializeComponent();
             AssignIconsToSquares();
-            goodMatch = new SoundPlayer("good.wav");
-            badMatch = new SoundPlayer("bad.wav");
-            won = new SoundPlayer("won.wav");
+            goodMatch = new SoundPlayer(Resources.good);
+            badMatch = new SoundPlayer(Resources.bad);
+            won = new SoundPlayer(Resources.won);
         }
 
         private void label1_Click(object sender, EventArgs e)
